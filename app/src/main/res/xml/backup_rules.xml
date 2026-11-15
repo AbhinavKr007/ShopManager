@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android's own automatic Google backup (Android 6-11): keep the shop data file and settings. -->
+<full-backup-content>
+    <include domain="file" path="shop.json" />
+    <include domain="sharedpref" path="shop.xml" />
+</full-backup-content>
