@@ -24,6 +24,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -70,11 +71,23 @@ public class MainActivity extends Activity {
 
         getWindow().setStatusBarColor(Color.parseColor("#1E3A8A"));
         web = new WebView(this);
-        web.setBackgroundColor(Color.parseColor("#1E3A8A"));
-        setContentView(web);
+        web.setBackgroundColor(Color.parseColor("#F3F5F9"));
 
-        // Keep content clear of the status bar / navigation bar / keyboard on all Android versions.
-        web.setOnApplyWindowInsetsListener((View v, WindowInsets insets) -> {
+        // WebView ignores its own padding, so the system bars are kept clear by spacer views:
+        // a blue strip under the status bar and a white strip under the navigation / gesture bar.
+        final View topBar = new View(this);
+        topBar.setBackgroundColor(Color.parseColor("#1E3A8A"));
+        final View bottomBar = new View(this);
+        bottomBar.setBackgroundColor(Color.WHITE);
+        final LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundColor(Color.WHITE);
+        root.addView(topBar, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        root.addView(web, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        root.addView(bottomBar, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        setContentView(root);
+
+        root.setOnApplyWindowInsetsListener((View v, WindowInsets insets) -> {
             int top, bottom, left, right;
             if (Build.VERSION.SDK_INT >= 30) {
                 android.graphics.Insets i = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.ime());
@@ -83,9 +96,12 @@ public class MainActivity extends Activity {
                 top = insets.getSystemWindowInsetTop(); bottom = insets.getSystemWindowInsetBottom();
                 left = insets.getSystemWindowInsetLeft(); right = insets.getSystemWindowInsetRight();
             }
-            v.setPadding(left, top, right, bottom);
+            setHeight(topBar, top);
+            setHeight(bottomBar, bottom);
+            v.setPadding(left, 0, right, 0);
             return insets;
         });
+        root.requestApplyInsets();
 
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
@@ -105,6 +121,14 @@ public class MainActivity extends Activity {
             }
         });
         web.loadUrl("file:///android_asset/index.html");
+    }
+
+    private static void setHeight(View view, int h) {
+        android.view.ViewGroup.LayoutParams lp = view.getLayoutParams();
+        if (lp.height != h) {
+            lp.height = h;
+            view.setLayoutParams(lp);
+        }
     }
 
     @Override
