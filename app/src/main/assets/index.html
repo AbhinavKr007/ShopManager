@@ -420,7 +420,7 @@ function vSetup(){const s=S.settings;
    <label class="f full">Bill footer<input class="in" id="sFoot" value="${esc(s.footer)}"></label>
   </div><div class="mfoot"><button class="btn p" data-act="saveSetup">Save</button></div></div>
   ${NATIVE?backupCard():''}
-  <div class="card" style="margin-top:14px"><h2>Good to know</h2><p class="m" style="margin:0;line-height:1.6">Prices are entered <b>including GST</b> (like MRP). If you add a GSTIN, bills show the tax breakup. ${NATIVE?'Your data is stored on this phone. Keep Google Drive backup turned on, and use <b>Restore from backup</b> on a new phone to get everything back.':mode==='cloud'?'Data syncs live — share this app as <b>Contributor</b> with a family member or helper so both phones can make bills.':'Right now data is saved in this browser only.'}</p></div>`}
+  <div class="card" style="margin-top:14px"><h2>Good to know</h2><p class="m" style="margin:0;line-height:1.6">Prices are entered <b>including GST</b> (like MRP). If you add a GSTIN, bills show the tax breakup. ${NATIVE?'App version '+esc((NATIVE.version&&NATIVE.version())||'')+'. Your data is stored on this phone. Keep Google Drive backup turned on, and use <b>Restore from backup</b> on a new phone to get everything back.':mode==='cloud'?'Data syncs live — share this app as <b>Contributor</b> with a family member or helper so both phones can make bills.':'Right now data is saved in this browser only.'}</p></div>`}
 
 /* ---------- POS ---------- */
 function openPOS(){pos.q='';pos.cat='All';pos.tab='menu';const el=$('#pos');el.classList.remove('hidden');

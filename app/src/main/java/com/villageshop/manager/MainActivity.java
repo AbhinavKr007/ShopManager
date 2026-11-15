@@ -338,6 +338,15 @@ public class MainActivity extends Activity {
         public String load() { return readData(); }
 
         @JavascriptInterface
+        public String version() {
+            try {
+                return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            } catch (Exception e) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
         public void save(String json) {
             try {
                 writeData(json);
