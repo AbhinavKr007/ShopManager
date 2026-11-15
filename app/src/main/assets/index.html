@@ -341,7 +341,9 @@ function vHome(){
    <div class="card"><h2>Today's bills</h2>${tb.length?`<div class="list">${tb.sort((a,b)=>b.ts-a.ts).slice(0,8).map(billLi).join('')}</div>`:'<div class="empty">No bills yet today</div>'}</div>
   </div>`;
 }
-const greet=()=>{const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
+const greet=()=>{const h=new Date().getHours();return h>=4&&h<12?'Good morning ☀️':h>=12&&h<17?'Good afternoon 🌤️':h>=17&&h<21?'Good evening 🌆':'Good night 🌙'};
+// Refresh the home screen when the time band changes, so the greeting stays right if the app is left open.
+let greetNow=greet();setInterval(()=>{const g=greet();if(g!==greetNow){greetNow=g;if(route()==='home')scheduleRender()}},60000);
 const billLi=b=>`<div class="li tap" data-act="bill" data-id="${b.id}"><div class="grow"><div class="t">${esc(b.custName||'Walk-in')}${b.kind==='repair'?' <span class="pill blue">Repair</span>':''}</div><div class="m">${esc(b.billNo)} · ${tm(b.ts)} · ${esc(b.pay)}</div></div><div style="text-align:right"><b>${inr(b.total)}</b>${b.due?`<div class="m" style="color:var(--bad)">Due ${inr(b.due)}</div>`:''}</div></div>`;
 const RSTAT={received:['Received','warn'],repairing:['Repairing','blue'],ready:['Ready','ok'],delivered:['Delivered','']};
 const repLi=r=>`<div class="li tap" data-act="repView" data-id="${r.id}"><div class="grow"><div class="t">${esc(r.item)} · ${esc(r.custName)}</div><div class="m">${esc(r.no)} · ${esc(r.problem||'')}</div></div><span class="pill ${RSTAT[r.status][1]}">${RSTAT[r.status][0]}</span></div>`;
